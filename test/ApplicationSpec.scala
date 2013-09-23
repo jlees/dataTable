@@ -49,8 +49,8 @@ class ApplicationSpec extends Specification {
         contentType(response) must beSome.which(_ == "application/json")
 
         val jsonResponse = Json.parse( contentAsString(response) ).asInstanceOf[JsObject]
-        (jsonResponse\"iTotalRecords").toString() must equalTo("11")
-        (jsonResponse\"iTotalDisplayRecords").toString() must equalTo("11")
+        (jsonResponse\"iTotalRecords").toString() must equalTo("16")
+        (jsonResponse\"iTotalDisplayRecords").toString() must equalTo("16")
       }
     }
   }

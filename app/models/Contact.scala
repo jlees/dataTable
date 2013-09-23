@@ -3,7 +3,7 @@ package models
 import play.api.Play.current
 import play.api.Play
 
-case class Contact(name:String, title:String, email:String)
+case class Contact(name:String, email:String)
 
 object ContactService {
 
@@ -33,14 +33,12 @@ object ContactService {
     if (asc) {
       sortCol match {
         case 0 => contactList.sortBy(contact => contact.name)
-        case 1 => contactList.sortBy(contact => contact.title)
-        case 2 => contactList.sortBy(contact => contact.email)
+        case 1 => contactList.sortBy(contact => contact.email)
       }
     } else {
       sortCol match {
         case 0 => contactList.sortWith(_.name > _.name)
-        case 1 => contactList.sortWith(_.title > _.title)
-        case 2 => contactList.sortWith(_.email > _.email)
+        case 1 => contactList.sortWith(_.email > _.email)
 
       }
 
@@ -61,9 +59,8 @@ object ContactService {
   private def convert(line: String): Contact = {
     val tokens = line.split(',')
     val name = tokens(0)
-    val title = tokens(1)
-    val email = tokens(2)
-    Contact(name, title, email)
+    val email = tokens(1)
+    Contact(name, email)
   }
 
 }

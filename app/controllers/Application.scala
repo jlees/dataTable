@@ -26,7 +26,7 @@ object Application extends Controller {
 
       val contactDataList = displayRecords.zipWithIndex.map{ case (contact,index) =>
       {
-        Json.arr(contact.name, contact.title, contact.email)
+        Json.arr(contact.name, contact.email)
       }}
 
       val result = Json.obj("sEcho" -> sEcho,

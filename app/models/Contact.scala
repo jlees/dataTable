@@ -5,7 +5,11 @@ import play.api.Play
 
 case class Contact(name:String, email:String)
 
-object ContactService {
+trait ContactService {
+  def getList(sortCol:Int, asc:Boolean, pageSize:Int, page:Int): (Int, List[Contact])
+}
+
+class FileContactService extends ContactService {
 
   /**
    *  sortCol - index of the column to be sorted.

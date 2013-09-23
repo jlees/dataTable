@@ -3,8 +3,10 @@ package controllers
 import play.api.mvc._
 import models.ContactService
 import play.api.libs.json._
+import com.google.inject._
 
-object Application extends Controller {
+@Singleton
+class Application @Inject()(contactService:ContactService) extends Controller {
 
   def show = Action(
     Ok(views.html.index("Contacts DataTable")))
@@ -22,7 +24,7 @@ object Application extends Controller {
       val sEcho = request.getQueryString("sEcho")
 
       val asc = (order == "asc")
-      val (iTotalRecords, displayRecords) = ContactService.getList(sortCol, asc, pageSize, page)
+      val (iTotalRecords, displayRecords) = contactService.getList(sortCol, asc, pageSize, page)
 
       val contactDataList = displayRecords.zipWithIndex.map{ case (contact,index) =>
       {

@@ -10,7 +10,9 @@ object ApplicationBuild extends Build {
   val appDependencies = Seq(
     // Add your project dependencies here,
     jdbc,
-    anorm
+    anorm,
+    "com.google.inject" % "guice" % "3.0",
+    "com.tzavellas" % "sse-guice" % "0.7.1"
   )
 
 

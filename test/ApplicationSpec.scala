@@ -6,18 +6,22 @@ import play.api.test._
 import play.api.test.Helpers._
 import play.api.test.FakeApplication
 import play.api.libs.json.{JsObject, Json}
+import controllers.Application
+import models.FileContactService
 
-/**
- * Add your spec here.
- * You can mock out a whole application including requests, plugins etc.
- * For more information, consult the wiki.
- */
+
 class ApplicationSpec extends Specification {
   
   "Application" should {
-    
+
+    object FakeContactGlobal extends play.api.GlobalSettings {
+      override def getControllerInstance[A](clazz: Class[A]) = {
+        new Application(new FileContactService).asInstanceOf[A]
+      }
+    }
+
     "return HTTP 200 for a valid request to the show() route" in {
-      running(FakeApplication()) {
+      running(FakeApplication(withGlobal = Some(FakeContactGlobal))) {
         val response = route(FakeRequest(GET, "/")).get
         status(response) must equalTo(OK)
         contentType(response) must beSome.which(_ == "text/html")
@@ -26,7 +30,7 @@ class ApplicationSpec extends Specification {
     }
     
     "return JSON for a valid request to the load() route" in {
-      running(FakeApplication()) {
+      running(FakeApplication(withGlobal = Some(FakeContactGlobal))) {
 
         val pageSize = "10"
         val page = "1"

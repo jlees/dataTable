@@ -12,12 +12,6 @@ import models.FileContactServiceImpl
 
 class ContactControllerSpec extends Specification {
 
-   object FakeContactGlobal extends play.api.GlobalSettings {
-      override def getControllerInstance[A](clazz: Class[A]) = {
-        new ContactController(new FileContactServiceImpl).asInstanceOf[A]
-      }
-   }
-
   "ContactController" should {
 
     "return HTTP 200 for a valid request to the show() route" in {
@@ -37,7 +31,7 @@ class ContactControllerSpec extends Specification {
         val sortCol = "1"
         val sEcho = "1"
 
-        val request = FakeRequest(GET, "/load").
+        val request = FakeRequest(GET, "/loadContacts").
                            withFormUrlEncodedBody(
                              "iDisplayLength" -> pageSize,
                              "iDisplayStart" -> page,
@@ -46,7 +40,7 @@ class ContactControllerSpec extends Specification {
                              "sEcho" -> sEcho
                            )
         val response = route(request).get
-        
+
         status(response) must equalTo(OK)
 
         contentType(response) must beSome.which(_ == "application/json")
@@ -57,4 +51,10 @@ class ContactControllerSpec extends Specification {
       }
     }
   }
+}
+
+object FakeContactGlobal extends play.api.GlobalSettings {
+    override def getControllerInstance[A](clazz: Class[A]) = {
+      new ContactController(new FileContactServiceImpl).asInstanceOf[A]
+    }
 }

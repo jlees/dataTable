@@ -6,12 +6,12 @@ import play.api.libs.json._
 import com.google.inject._
 
 @Singleton
-class Application @Inject()(contactService:ContactService) extends Controller {
+class ContactController @Inject()(contactService:ContactService) extends Controller {
 
-  def show = Action(
+  def display = Action(
     Ok(views.html.index("Contacts DataTable")))
 
-  def load = Action(
+  def loadContacts = Action(
     implicit request => {
       // Search is disabled.
       //val filter = request.getQueryString("sSearch")

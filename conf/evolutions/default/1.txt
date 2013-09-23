@@ -1,0 +1,30 @@
+# --- !Ups
+
+CREATE TABLE contact (
+  id            SERIAL PRIMARY KEY,
+  name          VARCHAR(50) NOT NULL,
+  email         VARCHAR(100) NOT NULL
+);
+
+INSERT INTO contact (name, email) VALUES ('Aaron Oliver','aoliver@ag.com');
+INSERT INTO contact (name, email) VALUES ('Amelia Province','aprovince@ag.com');
+INSERT INTO contact (name, email) VALUES ('Ascharya Shetty','ashetty@ag.com');
+INSERT INTO contact (name, email) VALUES ('Adam Verheyen','averheyen@ag.com');
+INSERT INTO contact (name, email) VALUES ('Bobbi Kibbey','bkibbey@ag.com');
+INSERT INTO contact (name, email) VALUES ('Brian Ketler','bketler@ag.com');
+INSERT INTO contact (name, email) VALUES ('Eric Patrick','epatrick@ag.com');
+INSERT INTO contact (name, email) VALUES ('Jennifer Pierce','jpierce@ag.com');
+INSERT INTO contact (name, email) VALUES ('Joe Bechter','jbechter@ag.com');
+INSERT INTO contact (name, email) VALUES ('John Armao','jarmao@ag.com');
+INSERT INTO contact (name, email) VALUES ('John Lees','jlees@ag.com');
+INSERT INTO contact (name, email) VALUES ('Kathy Antoske','kantoske@ag.com');
+INSERT INTO contact (name, email) VALUES ('Kevin Kuder','kkuder@ag.com');
+INSERT INTO contact (name, email) VALUES ('Mark Ryan','maryan@ag.com');
+INSERT INTO contact (name, email) VALUES ('Nick Cavallo','ncavallo@ag.com');
+INSERT INTO contact (name, email) VALUES ('Scott Weintraub','sweintraub@ag.com');
+INSERT INTO contact (name, email) VALUES ('Tom Flannery','tflannery@ag.com');
+
+
+# --- !Downs
+
+DROP TABLE IF EXISTS contact;

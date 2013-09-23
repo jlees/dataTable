@@ -2,23 +2,31 @@ package models
 
 import play.api.Play.current
 import play.api.Play
+import play.api.db._
 
+import anorm._
+import anorm.SqlParser._
+
+/**
+ * Contact Value Object
+ *
+ * @param name
+ * @param email
+ */
 case class Contact(name:String, email:String)
 
+/**
+ * Defines the contract from the ContactService
+ */
 trait ContactService {
   def getList(sortCol:Int, asc:Boolean, pageSize:Int, page:Int): (Int, List[Contact])
 }
 
-class FileContactService extends ContactService {
+/**
+ * Abstract parent implementation of ContactService that implements getList and provides sorting.
+ */
+abstract class AbstractContactServiceImpl extends ContactService {
 
-  /**
-   *  sortCol - index of the column to be sorted.
-   *  asc - true if sort is ascending.
-   *  pageSize : No of records per page
-   *  page : (O based). The page to be returned.
-   *
-   *  Return (total no of records, records to be displayed)
-   */
   def getList(sortCol:Int, asc:Boolean, pageSize:Int, page:Int): (Int, List[Contact]) = {
 
     val sortedContactList = getSortedList(sortCol, asc)
@@ -45,13 +53,18 @@ class FileContactService extends ContactService {
         case 1 => contactList.sortWith(_.email > _.email)
 
       }
-
     }
   }
 
-  /**
-   * Read the csv file conf/accessLog.txt and produce a list of Access objects.
-   */
+  def getListFromSource(): List[Contact]
+
+}
+
+/**
+ * Implementation of the ContactService that uses contacts from text file
+ */
+class FileContactServiceImpl extends AbstractContactServiceImpl {
+
   def getListFromSource(): List[Contact] = {
     // Read file conf/accessLog.txt
     val inputStream = Play.classloader.getResourceAsStream("contacts.txt")
@@ -65,6 +78,47 @@ class FileContactService extends ContactService {
     val name = tokens(0)
     val email = tokens(1)
     Contact(name, email)
+  }
+
+}
+
+/**
+ * Implementation of the ContactService that uses In-Memory Database table
+ */
+class DatabaseContactServiceImpl extends AbstractContactServiceImpl {
+
+  def getListFromSource(): List[Contact] = {
+    List(Contact.findAll(): _*)
+  }
+
+}
+
+/**
+ * Database CRUD for Anorm
+ */
+object Contact {
+
+  val simple = {
+    get[Pk[Long]]("id") ~
+    get[String]("name") ~
+    get[String]("email") map {
+      case id~name~email => Contact(name, email)
+    }
+  }
+
+  def findAll(): Seq[Contact] = {
+    DB.withConnection { implicit connection =>
+      SQL("select * from contact").as(Contact.simple *)
+    }
+  }
+
+  def create(bar: Contact): Unit = {
+    DB.withConnection { implicit connection =>
+      SQL("insert into contact(name, email) values ({name, email})").on(
+        'name -> bar.name,
+        'email -> bar.email
+      ).executeUpdate()
+    }
   }
 
 }
